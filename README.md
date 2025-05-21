@@ -8,10 +8,12 @@ From summoning structures to conjuring chaos, this mod brings command-line wizar
 
 - for me and my kids to spend time together & have fun 
 - for the kids to learn typing & type fast
-- for the kids to learn some math & coding
+- for the kids to learn some English words, Math & Coding
 
 I am new to Luanti and Lua, so expect some basic mistakes.
 And I do not have a lot of time for this repo...
+
+All the usage can be found in the spellbook.txt.
 
 ---
 ## About the name...
@@ -19,4 +21,5 @@ And I do not have a lot of time for this repo...
 - "Spells" - my first choice, but might be too big and general...
 - "ySpells" - would be OK, could be better...
 - "Spellbook" - sounds really cool, but widely used already...
+
 
