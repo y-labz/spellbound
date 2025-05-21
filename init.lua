@@ -1,8 +1,3 @@
--- Spellbound Mod for Minetest Game ---------------------------------
--- * to spend time with the kids and inspire them to learn coding;
--- * maybe include some beautiful math... ;
--- * and to test some ideas... ;
--- y-labz, 2025 -----------------------------------------------------
 
 local spellbook = {}
 
