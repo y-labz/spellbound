@@ -97,5 +97,38 @@ function util.valid_xyz(tab)
 end
 
 -------------------------------------------------------------------------
+-- update parameters with arguments
+function util.update_param(params, args)
+  local params_new = {}
+  -- parse args string, components with "="
+  -- e.g. args = " arg0 a=1 b=0.2 arg1 c=mat arg2 "
+  -- -> params_new = { a=1, b=0.2, c="mat" }
+  -- next step: compare params_new with params
+  -- e.g. params = { a=90, b=0, c="ta", d=1, e=43 }
+  -- update params values where the ids occur in params_new
+  -- then return params
+ 
+  -- Step 1: parse args string for key=value pairs
+  for key, value in string.gmatch(args, "(%w+)%s*=%s*([^%s]+)") do
+    -- Attempt to convert numeric values
+    local num = tonumber(value)
+    if num then
+      params_new[key] = num
+    else
+      params_new[key] = value
+    end
+  end
+
+  -- Step 2: update params using parsed values
+  for k, v in pairs(params_new) do
+    if params[k] ~= nil then
+      params[k] = v
+    end
+  end
+
+  return params
+end
+
+-------------------------------------------------------------------------
 return util
 
