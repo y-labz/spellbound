@@ -3,7 +3,7 @@ local path_mod = minetest.get_modpath(mod_name)
 local path_world = minetest.get_worldpath()
 
 local u = dofile(path_mod .. "/lib/utils.lua")
-local m = dofile(path_mod .. "/lib/math.lua")
+local m = dofile(path_mod .. "/lib/maths.lua")
 local spellbook = {}
 
 ---------------------------------------------------------------------

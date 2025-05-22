@@ -1,0 +1,50 @@
+Spell: super
+Description: Turn ON my superman mode
+Usage:
+  /spell super
+
+--------------------
+Spell: superoff
+Description: Turn OFF my superman mode
+Usage:
+  /spell superoff
+
+--------------------
+Spell: firering
+Description: Summon a fire ring to myself or another player
+Usage:
+  /spell firering [playername] [n_fire] [radius]
+
+--------------------
+Spell: boom
+Description: Summon a TNT to player
+Usage:
+  /spell boom [playername]
+
+--------------------
+Spell: build
+Description: Build structures using xyz file input
+Usage:
+  /spell build [xyz_file] [scale] [up_dir] [material]
+  2 strings, 1st file, 2nd material, 2 numbers, scale & up_dir 1/2/3
+  could be mixed up or some default
+
+--------------------
+Spell: t
+Description: Test function for dev
+Usage:
+  /spell t [args]
+
+--------------------
+Spell: purge
+Description: Quickly clears all objects (like animals) from the map
+Usage:
+  /spell purge
+
+--------------------
+Spell: help
+Description: print available spells
+Usage:
+  /spell help
+
+--------------------

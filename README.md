@@ -7,8 +7,8 @@ From summoning structures to conjuring chaos, this mod brings command-line wizar
 ## So I wrote this mod ...
 
 - for me and my kids to spend time together & have fun 
-- for the kids to learn typing & type fast
-- for the kids to learn some English words, Math & Coding
+- motivate the kids to learn typing & type fast
+- motivate the kids to learn some English words, Math & Coding
 
 I am new to Luanti and Lua, so expect some basic mistakes.
 And I do not have a lot of time for this repo...
