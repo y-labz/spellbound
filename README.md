@@ -22,4 +22,11 @@ All the usage should be found in the spellbook.txt.
 - "ySpells" - would be OK, could be better...
 - "Spellbook" - sounds really cool, but widely used already...
 
+---
+## Credits
+
+**magic.ogg**
+- Source: [Freesound](https://freesound.org/people/Universfield/sounds/758818/)
+- Author: [Universfield](https://freesound.org/people/Universfield/)
+- License: [Creative Commons Attribution 4.0 International (CC BY 4.0)](https://creativecommons.org/licenses/by/4.0/)
 
