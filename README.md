@@ -23,10 +23,17 @@ All the usage should be found in the spellbook.txt.
 - "Spellbook" - sounds really cool, but widely used already...
 
 ---
-## Credits
+## 📜 Credits
+
+### 🔊 Sound Effects
 
 **magic.ogg**
+- Creator: [Universfield](https://freesound.org/people/Universfield/)
 - Source: [Freesound](https://freesound.org/people/Universfield/sounds/758818/)
-- Author: [Universfield](https://freesound.org/people/Universfield/)
-- License: [Creative Commons Attribution 4.0 International (CC BY 4.0)](https://creativecommons.org/licenses/by/4.0/)
+- License: [Attribution 4.0](https://creativecommons.org/licenses/by/4.0/)
+
+**magic-strike.ogg**
+- Creator: [Aleks41](https://freesound.org/people/Aleks41/)
+- Source: [Freesound](https://freesound.org/people/Aleks41/sounds/406063/)
+- License: [Creative Commons 0](https://creativecommons.org/publicdomain/zero/1.0/)
 
