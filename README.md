@@ -37,3 +37,9 @@ All the usage should be found in the spellbook.txt.
 - Source: [Freesound](https://freesound.org/people/Aleks41/sounds/406063/)
 - License: [Creative Commons 0](https://creativecommons.org/publicdomain/zero/1.0/)
 
+### 📂 Geometry Data
+
+- XYZ data files from [John Burkardt's collection](https://people.math.sc.edu/Burkardt/data/xyz/xyz.html)  
+- License: [GNU Lesser General Public License (LGPL)](https://www.gnu.org/licenses/lgpl-2.1.html)
+- Author: John Burkardt
+
