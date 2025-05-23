@@ -16,10 +16,10 @@ Usage:
   /spell firering [playername] [n_fire] [radius]
 
 --------------------
-Spell: glassbox
-Description: Summons a glass box to trap / protect a player
+Spell: glasscube
+Description: Summons a glass cage to trap / protect a player
 Usage:
-  /spell glassbox [playername] [L=10]
+  /spell glasscube [T=playername] [L=10] [M=default:glass]
 
 --------------------
 Spell: build

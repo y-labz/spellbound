@@ -5,6 +5,24 @@ function util.greet(name)
 end
 
 -------------------------------------------------------------------------
+-- play sounds...
+function util.sound1(p)
+  minetest.sound_play("magic", {
+    pos = p,
+    max_hear_distance = 16,
+    gain = 1.0,
+  })
+end
+
+function util.sound2(p)
+  minetest.sound_play("magic-strike", {
+    pos = p,
+    max_hear_distance = 16,
+    gain = 1.0,
+  })
+end
+
+-------------------------------------------------------------------------
 -- see if the file exists
 function util.file_exists(file)
   local f = io.open(file, "rb")
@@ -105,12 +123,32 @@ end
 -------------------------------------------------------------------------
 -- build up height h from one position
 function util.build_h(pos, h, material)
-  -- pos {x=..,y=..,z=..}
   for i=1, h do
     minetest.remove_node(pos)
     minetest.place_node(pos, {name=material})
-    -- minetest.set_node(pos, {name=material})
     pos.y = pos.y + 1
+  end
+end
+
+-------------------------------------------------------------------------
+-- Function to set the blocks in a cube shell
+function util.build_cube_shell(minp, maxp, material)
+  for x = minp.x, maxp.x do
+    for y = minp.y, maxp.y do
+      for z = minp.z, maxp.z do
+        local is_surface = (
+        x == minp.x or x == maxp.x or
+        y == minp.y or y == maxp.y or
+        z == minp.z or z == maxp.z
+      )
+        if is_surface then
+          minetest.set_node({x=x, y=y, z=z}, {name=material})
+          -- minetest.remove_node({x=x, y=y, z=z})
+          -- minetest.place_node({x=x, y=y, z=z}, {name=material})
+          -- does not work here due to place behavior
+        end
+      end
+    end
   end
 end
 

@@ -95,26 +95,66 @@ spellbook.firering = function(name, args)
     pos.x = origin.x + r * math.cos(i * rad1)
     pos.y = origin.y
     pos.z = origin.z + r * math.sin(i * rad1)
-    minetest.remove_node(pos)
     -- minetest.set_node(pos, {name="default:torch"})
-    -- minetest.place_node(pos, {name="default:torch"})
+    minetest.remove_node(pos)
     minetest.place_node(pos, {name="fire:permanent_flame"})
+    -- minetest.place_node(pos, {name="default:torch"})
   end
 
+  u.sound1(origin)
   minetest.chat_send_all(name .. " is casting a fire spell ... ")
 end
 
 ---------------------------------------------------------------------
-spellbook.glassbox = function(name, args)
-  -- Summons a glass box to trap / protect a player
-  -- Usage: /spell glassbox [playername] [L=10]
-  -- local pos = minetest.get_player_by_name(name):get_pos()
-  -- minetest.add_entity(pos, "tnt:tnt") --bug todo
-  -- minetest.add_entity(pos, "fire:permanent_flame")
-  -- pos.x = pos.x + 2
-  -- minetest.remove_node(pos)
-  -- minetest.place_node(pos, {name="tnt:tnt"})
-  minetest.chat_send_player(name, "Boom summoned 💥")
+spellbook.glasscube = function(name, args)
+  -- Summons a glass cage to trap / protect a player
+  -- Usage: /spell glasscube [T=playername] [L=10] [M=default:glass]
+
+  -- default parameters
+  local par = {
+    T = name,  -- default target me
+    L = 10,    -- input Length to calc, not exact outcome
+    M = "default:glass"
+  }
+  par = u.update_param(par, args)
+  -- length between 4 and 100, well disciplined little number
+  par.L = math.max(8, math.min(100, par.L)) - 1
+  -- local half = par.L / 2
+  -- local half = math.floor((par.L - 1) / 2 + 0.5)
+  local half = math.floor(par.L / 2 + 0.5)
+
+  -- setup the target:
+  local player
+  local player_t = minetest.get_player_by_name(par.T)
+  if player_t then
+    player = player_t
+  else
+    minetest.chat_send_player(name, "ERROR, no player " .. par.T)
+    return false
+  end
+  local origin = vector.round(player:get_pos())
+
+  -- Base corner of the outer cube
+  local base_min = {
+    x = origin.x - half,
+    y = origin.y - 2, --tested ok, stands on floor
+    z = origin.z - half
+  }
+  local base_max = {
+    x = origin.x + half,
+    y = origin.y - 2 + par.L,
+    z = origin.z + half
+  }
+  -- set outer layer
+  u.build_cube_shell(base_min, base_max, par.M)
+  -- Inner layer (1 block inside)
+  local inner_min = vector.add(base_min, {x=1, y=1, z=1})
+  local inner_max = vector.add(base_max, {x=-1, y=-1, z=-1})
+  u.build_cube_shell(inner_min, inner_max, par.M)
+
+  u.sound2(origin)
+  minetest.chat_send_all(name .. " summoned a cage around " .. par.T .. "!")
+  return true
 end
 
 ---------------------------------------------------------------------
@@ -168,7 +208,7 @@ spellbook.build = function(name, args)
   -- handle up vector, up comes at last, upv[3]
   local upv = m.rotate_up_vector(up_dir)
 
-  local fullpath = path_mod .. "/dat/" .. filename
+  local fullpath = path_mod .. "/models/" .. filename
   minetest.chat_send_player(name, "file: " .. fullpath)
 
   if u.file_exists(fullpath) then
@@ -188,8 +228,6 @@ spellbook.build = function(name, args)
         p2.z = origin.z + distz + scale * p1[upv[2]]
         p2.y = origin.y + disty + scale * p1[upv[3]] --y is up in game
         --todo offset ymin from foot level...
-        minetest.remove_node(p2)
-        -- minetest.set_node(p2, {name="default:stone"})
         minetest.set_node(p2, {name = material})
       end
     end
@@ -197,7 +235,8 @@ spellbook.build = function(name, args)
     minetest.chat_send_player(name, "File not found: " .. fullpath)
   end
 
-  return true, "Building done."
+  minetest.chat_send_player(name, "Building done.")
+  return true
 end
 
 ---------------------------------------------------------------------
@@ -237,6 +276,7 @@ spellbook.archimedes = function(name, args)
     theta = theta + 2*math.pi / N
   end
 
+  u.sound2(origin)
   minetest.chat_send_all(name .. "just built an archimedes altar")
   return true
 end
@@ -291,6 +331,7 @@ spellbook.wall = function(name, args)
     end
   end
 
+  u.sound2(player_pos)
   minetest.chat_send_all(name .. "summoned a wall...")
   return true
 end
@@ -302,10 +343,10 @@ local path_beam = path_world .. '/beam/'
 -- Because mkdir() is idempotent — calling it repeatedly is fine;
 -- it'll just skip if the dir already exists. No harm done.
 minetest.mkdir(path_beam)
-minetest.log("action", "[beam] Data directory check: " .. path_beam)
+minetest.log("action", "[beam] directory check: " .. path_beam)
 
 -- if not minetest.mkdir(path_beam) then
---   minetest.log("action", "[beam] Data directory already exists at: " .. path_beam)
+--   minetest.log("action", "[beam] directory already exists at: " .. path_beam)
 -- else
 --   minetest.log("action", "[beam] Created data directory at: " .. path_beam)
 -- end
@@ -358,12 +399,14 @@ spellbook.beam = function(name, args)
 
   if args == nil or args == "" then
     player:set_pos(pos2)
+    u.sound1(pos2)
     minetest.chat_send_player(name, "beamed to (0, 10, 0)")
     return true
   elseif u.file_exists(path_beam .. args) then
     local line = u.lines_from(path_beam .. args)
     pos2 = vector.from_string(line[1])
     player:set_pos(pos2)
+    u.sound1(pos2)
     minetest.chat_send_player(name, "beamed to " .. args)
     return true
   else
@@ -414,7 +457,7 @@ spellbook.help = function(name, args)
   -- Usage: /spell help
   local available = {}
   for k, _ in pairs(spellbook) do table.insert(available, k) end
-  minetest.chat_send_player(name, "Available spells: " .. table.concat(available, ", "))
+  minetest.chat_send_player(name, "spells: " .. table.concat(available, ", "))
 end
 
 ---------------------------------------------------------------------
