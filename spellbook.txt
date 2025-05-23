@@ -43,6 +43,26 @@ Usage:
   the order does not matter, but the format Key=Value
 
 --------------------
+Spell: beamlist
+Description: Get a list of available beam positions
+Usage:
+  /spell beamlist
+
+--------------------
+Spell: beamsave
+Description: Save a beam position with a name
+Usage:
+  /spell beamsave [position_name]
+  pos_number will be used if no name given
+
+--------------------
+Spell: beam
+Description: Teleport / beam myself to a saved position
+Usage:
+  /spell beam [position_name]
+  (0, 10, 0) will be used if no name given
+
+--------------------
 Spell: t
 Description: Test function for dev
 Usage:
