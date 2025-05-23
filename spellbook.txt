@@ -16,10 +16,10 @@ Usage:
   /spell firering [playername] [n_fire] [radius]
 
 --------------------
-Spell: boom
-Description: Summon a TNT to player
+Spell: glassbox
+Description: Summons a glass box to trap / protect a player
 Usage:
-  /spell boom [playername]
+  /spell glassbox [playername] [L=10]
 
 --------------------
 Spell: build
@@ -28,6 +28,19 @@ Usage:
   /spell build [xyz_file] [scale] [up_dir] [material]
   2 strings, 1st file, 2nd material, 2 numbers, scale & up_dir 1/2/3
   could be mixed up or some default
+
+--------------------
+Spell: archimedes
+Description: Build a cool archimedes spiral structure
+Usage:
+  /spell archimedes [H=10] [M=default:brick]
+
+--------------------
+Spell: wall
+Description: Build a wall in front of the target player
+Usage:
+  /spell wall [T=name] [H=40] [L=80] [D=30] [M=default:brick]
+  the order does not matter, but the format Key=Value
 
 --------------------
 Spell: t

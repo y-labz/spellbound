@@ -7,7 +7,7 @@ local m = dofile(path_mod .. "/lib/maths.lua")
 local spellbook = {}
 
 ---------------------------------------------------------------------
--- all kind of super powers: speed, fire and so on ------------------
+-- all kind of super powers: speed, fire and so on
 ---------------------------------------------------------------------
 spellbook.super = function(name, args)
   -- Turn ON my superman mode
@@ -39,7 +39,7 @@ end
 spellbook.firering = function(name, args)
   -- Summon a fire ring to myself or another player
   -- Usage: /spell firering [playername] [n_fire] [radius]
-  minetest.chat_send_all(name .. " is casting a fire spell ... ")
+
   -- default setting:
   local target = name
   local n = 10
@@ -55,7 +55,7 @@ spellbook.firering = function(name, args)
     local n2 = nil
     local r2 = nil
     -- fuzzy parsing
-    for _, v in ipairs(arg_tab) do 
+    for _, v in ipairs(arg_tab) do
       -- if tonumber(v) == nil and not target2 then
       if tonumber(v) == nil then
         -- playername str cannot be turned to number
@@ -77,35 +77,39 @@ spellbook.firering = function(name, args)
   end
   -- todo add limits??
 
-  if minetest.get_player_by_name(target) ~= nil then
-    player = minetest.get_player_by_name(target)
+  -- setup the target:
+  local player
+  local player_t = minetest.get_player_by_name(target)
+  if player_t then
+    player = player_t
   else
-    minetest.chat_send_all("ERROR, no player " .. target)
+    minetest.chat_send_player(name, "ERROR, no player " .. target)
     return false
   end
 
-  local pos0 = player:get_pos() -- circle origin
-  local pos = {x=0, y=0, z=0}
-  -- pos.y = pos0.y - 1
+  local origin = player:get_pos() -- circle origin
+  local pos = vector.zero()
+  -- pos.y = origin.y - 1
   local rad1 = math.pi * 2 / n
   for i=0, n-1 do
-    pos.x = pos0.x + r * math.cos(i * rad1)
-    pos.y = pos0.y
-    pos.z = pos0.z + r * math.sin(i * rad1)
+    pos.x = origin.x + r * math.cos(i * rad1)
+    pos.y = origin.y
+    pos.z = origin.z + r * math.sin(i * rad1)
     minetest.remove_node(pos)
     -- minetest.set_node(pos, {name="default:torch"})
     -- minetest.place_node(pos, {name="default:torch"})
     minetest.place_node(pos, {name="fire:permanent_flame"})
   end
+
+  minetest.chat_send_all(name .. " is casting a fire spell ... ")
 end
 
 ---------------------------------------------------------------------
--- todo, tnt cannot be added...
-spellbook.boom = function(name, args)
-  -- Summon a TNT to player
-  -- Usage: /spell boom [playername]
-  local pos = minetest.get_player_by_name(name):get_pos()
-  minetest.add_entity(pos, "tnt:tnt") --bug todo
+spellbook.glassbox = function(name, args)
+  -- Summons a glass box to trap / protect a player
+  -- Usage: /spell glassbox [playername] [L=10]
+  -- local pos = minetest.get_player_by_name(name):get_pos()
+  -- minetest.add_entity(pos, "tnt:tnt") --bug todo
   -- minetest.add_entity(pos, "fire:permanent_flame")
   -- pos.x = pos.x + 2
   -- minetest.remove_node(pos)
@@ -114,7 +118,7 @@ spellbook.boom = function(name, args)
 end
 
 ---------------------------------------------------------------------
--- build things like xyz models, big walls, spirals and so on -------
+-- build things like xyz models, huge walls, spirals and so on
 ---------------------------------------------------------------------
 -- todo: 3D Print mimic with different materials for different layers
 spellbook.build = function(name, args)
@@ -124,11 +128,11 @@ spellbook.build = function(name, args)
   -- Usage: could be mixed up or some default
 
   local player = minetest.get_player_by_name(name)
-  local pos0 = player:get_pos()
+  local origin = player:get_pos()
   local look_dir = player:get_look_dir()
 
   -- default parameters:
-  local filename = "helix_201.xyz"
+  local filename = "helix.xyz"
   local material = "default:stone" --depend!
   local scale = 1
   local up_dir = 3 --most cases z is pointing upward?
@@ -143,7 +147,7 @@ spellbook.build = function(name, args)
     -- tmp var...
     local f2, m2, s2, u2 = nil, nil, nil, nil
     -- fuzzy parsing
-    for _, v in ipairs(arg_tab) do 
+    for _, v in ipairs(arg_tab) do
       if tonumber(v) == nil and not f2 then
         f2 = v
       elseif tonumber(v) == nil and not m2 then
@@ -170,7 +174,7 @@ spellbook.build = function(name, args)
   if u.file_exists(fullpath) then
     minetest.chat_send_player(name, "found file")
     local points = u.lines_from(fullpath)
-    local p1 = {0, 0, 0}
+    local p1
     local p2 = {x=0, y=0, z=0}
     local distx = dist * look_dir.x
     local distz = dist * look_dir.z --north in map
@@ -180,9 +184,9 @@ spellbook.build = function(name, args)
     for i, line in ipairs(points) do
       p1 = u.parse_line_xyz(line)
       if u.valid_xyz(p1) then
-        p2.x = pos0.x + distx + scale * p1[upv[1]]
-        p2.z = pos0.z + distz + scale * p1[upv[2]]
-        p2.y = pos0.y + disty + scale * p1[upv[3]] --y is up in game
+        p2.x = origin.x + distx + scale * p1[upv[1]]
+        p2.z = origin.z + distz + scale * p1[upv[2]]
+        p2.y = origin.y + disty + scale * p1[upv[3]] --y is up in game
         --todo offset ymin from foot level...
         minetest.remove_node(p2)
         -- minetest.set_node(p2, {name="default:stone"})
@@ -197,11 +201,186 @@ spellbook.build = function(name, args)
 end
 
 ---------------------------------------------------------------------
--- unsorted spells --------------------------------------------------
+spellbook.archimedes = function(name, args)
+  -- Build a cool archimedes spiral structure
+  -- Usage: /spell archimedes [H=10] [M=default:brick]
+
+  -- default parameters
+  local par = {
+    H = 10,  -- Height of the spiral wall
+    M = "default:brick"  -- Material
+  }
+  par = u.update_param(par, args) --if special wishes
+
+  -- config part, not included in args yet
+  local theta_max = 2 * math.pi * 4
+  local N0 = 100 -- ini for the first round
+  local N -- when radius grows, need nore points to avoid gap
+  local theta = 0.1 --init angle
+  local a, b = 5, 1
+
+  local me = minetest.get_player_by_name(name)
+  local origin = me:get_pos()
+  local p1 = vector.zero()
+  local tmp
+
+  while theta <= theta_max do
+    tmp = m.spiral_archimedes(theta, a, b)
+    p1.x = tmp[1] + origin.x
+    p1.z = tmp[2] + origin.z
+    p1.y = origin.y
+    u.build_h(p1, par.H, par.M)
+    --update angle and N
+    -- if theta > 2*math.pi then
+    N = N0 * math.ceil(theta / (2*math.pi))
+    --N0,N0*2,*3,and so on,could be more analytical,works,whatever
+    theta = theta + 2*math.pi / N
+  end
+
+  minetest.chat_send_all(name .. "just built an archimedes altar")
+  return true
+end
+
+---------------------------------------------------------------------
+spellbook.wall = function(name, args)
+  -- Build a wall in front of the target player
+  -- Usage: /spell wall [T=name] [H=40] [L=80] [D=30] [M=default:brick]
+  -- Usage: the order does not matter, but the format Key=Value
+
+  -- default parameters
+  local par = {
+    T = name,             -- target name
+    H = 40,               -- Height of the wall
+    L = 80,               -- Length of the wall
+    D = 30,               -- Distance to the player
+    M = "default:brick"   -- Material
+  }
+  par = u.update_param(par, args)
+
+  -- setup the target:
+  local player
+  local player_t = minetest.get_player_by_name(par.T)
+  if player_t then
+    player = player_t
+  else
+    minetest.chat_send_player(name, "ERROR, no player " .. par.T)
+    return false
+  end
+
+  local look_dir = player:get_look_dir()
+  local player_pos = player:get_pos()
+  -- pos.y = pos.y + player:get_properties().eye_height
+  -- local p0 = vector.add(pos, vector.multiply(look_dir, par.D))
+  local p0 = player_pos + look_dir * par.D --vector operators
+  p0.y = player_pos.y --on the same level
+  -- p0 = vector.round(p0)
+  p0 = p0:round() --roundup to integers
+  local up_vector = vector.new(0, 1, 0) --up, y positive
+  local look_dir_horizont = vector.new(look_dir.x, 0, look_dir.z)
+  local wall_edge_dir = vector.cross(up_vector, look_dir_horizont)
+  -- v2 = vector.normalize(v2)
+  wall_edge_dir = wall_edge_dir:normalize()
+  local p1
+
+  for i = 0, par.H do --start from 0 to preserve the bottom level
+    for j = math.round(par.L/2)*(-1), math.round(par.L/2) do
+      p1 = p0 + i * up_vector + j * wall_edge_dir
+      p1 = vector.round(p1)
+      minetest.remove_node(p1)
+      minetest.place_node(p1, {name = par.M})
+    end
+  end
+
+  minetest.chat_send_all(name .. "summoned a wall...")
+  return true
+end
+
+---------------------------------------------------------------------
+-- beam (like teleport) related functions
+---------------------------------------------------------------------
+local path_beam = path_world .. '/beam/'
+-- Because mkdir() is idempotent — calling it repeatedly is fine;
+-- it'll just skip if the dir already exists. No harm done.
+minetest.mkdir(path_beam)
+minetest.log("action", "[beam] Data directory check: " .. path_beam)
+
+-- if not minetest.mkdir(path_beam) then
+--   minetest.log("action", "[beam] Data directory already exists at: " .. path_beam)
+-- else
+--   minetest.log("action", "[beam] Created data directory at: " .. path_beam)
+-- end
+
+---------------------------------------------------------------------
+spellbook.beamlist = function(name, args)
+  -- Get a list of available beam positions
+  -- Usage: /spell beamlist
+  local dir_list = minetest.get_dir_list(path_beam)
+  minetest.chat_send_player(name, tostring(#dir_list) .. ' beam positions found:')
+  minetest.chat_send_player(name, table.concat(dir_list, " | "))
+end
+
+---------------------------------------------------------------------
+spellbook.beamsave = function(name, args)
+  -- Save a beam position with a name
+  -- Usage: /spell beamsave [position_name]
+  -- Usage: pos_number will be used if no name given
+  local pos = minetest.get_player_by_name(name):get_pos()
+  local pos_txt = vector.to_string(pos)
+  local posname = args
+  if posname == nil or posname == "" then
+    local dir_list = minetest.get_dir_list(path_beam)
+    posname = 'pos_' .. tostring(#dir_list + 1)
+  end
+
+  if u.file_exists(path_beam .. posname) then
+    posname = posname .. "2"
+    minetest.chat_send_player(name, "posname conflict, using " .. posname)
+  end
+
+  local res = minetest.safe_file_write(path_beam .. posname, pos_txt)
+
+  if res then
+    minetest.chat_send_player(name, "beamsave done: " .. path_beam .. posname)
+    return true
+  else
+    minetest.chat_send_player(name, "beamsave ERROR!")
+    return false
+  end
+end
+
+---------------------------------------------------------------------
+spellbook.beam = function(name, args)
+  -- Teleport / beam myself to a saved position
+  -- Usage: /spell beam [position_name]
+  -- Usage: (0, 10, 0) will be used if no name given
+  local player = minetest.get_player_by_name(name)
+  local pos2 = vector.new(0, 10, 0)
+
+  if args == nil or args == "" then
+    player:set_pos(pos2)
+    minetest.chat_send_player(name, "beamed to (0, 10, 0)")
+    return true
+  elseif u.file_exists(path_beam .. args) then
+    local line = u.lines_from(path_beam .. args)
+    pos2 = vector.from_string(line[1])
+    player:set_pos(pos2)
+    minetest.chat_send_player(name, "beamed to " .. args)
+    return true
+  else
+    minetest.chat_send_player(name, "location not found: " .. args)
+    return false
+  end
+end
+
+---------------------------------------------------------------------
+-- unsorted spells
 ---------------------------------------------------------------------
 spellbook.t = function(name, args)
   -- Test function for dev
   -- Usage: /spell t [args]
+
+  minetest.log("action", "_VERSION: " .. _VERSION)
+
   minetest.chat_send_all(name .. " is testing the spells...")
   if args then
     minetest.chat_send_all("args: " .. args)

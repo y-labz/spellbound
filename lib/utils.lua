@@ -13,20 +13,20 @@ function util.file_exists(file)
 end
 
 -------------------------------------------------------------------------
--- get all lines from a file, returns an empty 
+-- get all lines from a file, returns an empty
 -- list/table if the file does not exist
 function util.lines_from(file)
   if not util.file_exists(file) then return {} end
   local lines = {}
-  for line in io.lines(file) do 
+  for line in io.lines(file) do
     lines[#lines + 1] = line
   end
   return lines
 end
 
 -------------------------------------------------------------------------
--- ok, could be more generic, like sep as arg1, but 
--- reg exp of , ; space different, unfamiliar... maybe later. 
+-- ok, could be more generic, like sep as arg1, but
+-- reg exp of , ; space different, unfamiliar... maybe later.
 function util.parse_line_xyz(line)
   local tmp = {}
   local res = {}
@@ -73,8 +73,8 @@ function util.parse_line_xyz(line)
     return res
   elseif #tmp == 0 then --empty line with spaces
     return {}
-  else
-    tmp = {} --reset tmp table and check other sep
+  -- else
+    -- tmp = {} --reset tmp table and check other sep
   end
 
   -- print("parse line error!") --todo
@@ -83,7 +83,7 @@ function util.parse_line_xyz(line)
 end
 
 -------------------------------------------------------------------------
----verify x, y, z numbers in the table
+-- verify x, y, z numbers in the table
 function util.valid_xyz(tab)
   if #tab ~= 3 then
     return false
@@ -97,6 +97,24 @@ function util.valid_xyz(tab)
 end
 
 -------------------------------------------------------------------------
+-- generate point table from file
+
+-------------------------------------------------------------------------
+-- get min max of some coordinates for offset
+
+-------------------------------------------------------------------------
+-- build up height h from one position
+function util.build_h(pos, h, material)
+  -- pos {x=..,y=..,z=..}
+  for i=1, h do
+    minetest.remove_node(pos)
+    minetest.place_node(pos, {name=material})
+    -- minetest.set_node(pos, {name=material})
+    pos.y = pos.y + 1
+  end
+end
+
+-------------------------------------------------------------------------
 -- update parameters with arguments
 function util.update_param(params, args)
   local params_new = {}
@@ -107,7 +125,7 @@ function util.update_param(params, args)
   -- e.g. params = { a=90, b=0, c="ta", d=1, e=43 }
   -- update params values where the ids occur in params_new
   -- then return params
- 
+
   -- Step 1: parse args string for key=value pairs
   for key, value in string.gmatch(args, "(%w+)%s*=%s*([^%s]+)") do
     -- Attempt to convert numeric values

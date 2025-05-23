@@ -1,5 +1,6 @@
 local maths = {}
 
+-------------------------------------------------------------------------
 function maths.rotate_up_vector(up)
   -- up must be number
   if type(up) ~= "number" then
@@ -19,5 +20,14 @@ end
 -- rotate_up_vector(2) -- {1, 3, 2}
 -- rotate_up_vector(3) -- {1, 2, 3}
 
+-------------------------------------------------------------------------
+function maths.spiral_archimedes(theta, a, b)
+  local r = a + b * theta
+  local x = r * math.cos(theta)
+  local y = r * math.sin(theta)
+  return {x, y, r}
+end
+
+-------------------------------------------------------------------------
 return maths
 
