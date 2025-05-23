@@ -316,7 +316,7 @@ spellbook.beamlist = function(name, args)
   -- Usage: /spell beamlist
   local dir_list = minetest.get_dir_list(path_beam)
   minetest.chat_send_player(name, tostring(#dir_list) .. ' beam positions found:')
-  minetest.chat_send_player(name, table.concat(dir_list, " | "))
+  minetest.chat_send_player(name, table.concat(dir_list, "  ;  "))
 end
 
 ---------------------------------------------------------------------
