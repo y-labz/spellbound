@@ -1,12 +1,12 @@
-local util = {}
+local utils = {}
 
-function util.greet(name)
+function utils.greet(name)
   minetest.log("action", "[Luanti] Spell cast by " .. name)
 end
 
 -------------------------------------------------------------------------
 -- play sounds...
-function util.sound1(p)
+function utils.sound1(p)
   minetest.sound_play("magic", {
     pos = p,
     max_hear_distance = 16,
@@ -14,7 +14,7 @@ function util.sound1(p)
   })
 end
 
-function util.sound2(p)
+function utils.sound2(p)
   minetest.sound_play("magic-strike", {
     pos = p,
     max_hear_distance = 16,
@@ -24,7 +24,7 @@ end
 
 -------------------------------------------------------------------------
 -- see if the file exists
-function util.file_exists(file)
+function utils.file_exists(file)
   local f = io.open(file, "rb")
   if f then f:close() end
   return f ~= nil
@@ -33,8 +33,8 @@ end
 -------------------------------------------------------------------------
 -- get all lines from a file, returns an empty
 -- list/table if the file does not exist
-function util.lines_from(file)
-  if not util.file_exists(file) then return {} end
+function utils.lines_from(file)
+  if not utils.file_exists(file) then return {} end
   local lines = {}
   for line in io.lines(file) do
     lines[#lines + 1] = line
@@ -45,7 +45,7 @@ end
 -------------------------------------------------------------------------
 -- ok, could be more generic, like sep as arg1, but
 -- reg exp of , ; space different, unfamiliar... maybe later.
-function util.parse_line_xyz(line)
+function utils.parse_line_xyz(line)
   local tmp = {}
   local res = {}
 
@@ -96,13 +96,13 @@ function util.parse_line_xyz(line)
   end
 
   -- print("parse line error!") --todo
-  minetest.log("error", "util.parse_line_xyz error!")
+  minetest.log("error", "utils.parse_line_xyz error!")
   return {}
 end
 
 -------------------------------------------------------------------------
 -- verify x, y, z numbers in the table
-function util.valid_xyz(tab)
+function utils.valid_xyz(tab)
   if #tab ~= 3 then
     return false
   end
@@ -122,7 +122,7 @@ end
 
 -------------------------------------------------------------------------
 -- build up height h from one position
-function util.build_h(pos, h, material)
+function utils.build_h(pos, h, material)
   for i=1, h do
     minetest.remove_node(pos)
     minetest.place_node(pos, {name=material})
@@ -132,7 +132,7 @@ end
 
 -------------------------------------------------------------------------
 -- Function to set the blocks in a cube shell
-function util.build_cube_shell(minp, maxp, material)
+function utils.build_cube_shell(minp, maxp, material)
   for x = minp.x, maxp.x do
     for y = minp.y, maxp.y do
       for z = minp.z, maxp.z do
@@ -154,7 +154,7 @@ end
 
 -------------------------------------------------------------------------
 -- update parameters with arguments
-function util.update_param(params, args)
+function utils.update_param(params, args)
   local params_new = {}
   -- parse args string, components with "="
   -- e.g. args = " arg0 a=1 b=0.2 arg1 c=mat arg2 "
@@ -186,5 +186,5 @@ function util.update_param(params, args)
 end
 
 -------------------------------------------------------------------------
-return util
+return utils
 

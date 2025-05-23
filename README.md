@@ -45,8 +45,8 @@ All the usage should be found in the spellbook.txt.
 - License: [GNU Lesser General Public License (LGPL)](https://www.gnu.org/licenses/lgpl-2.1.html)
 
 I removed some cool data set (like the dragon) to avoid any license issues.
-Goto sites like free3d.com and get your favorite models.
-Convert them to xyz data with any tool you like and put them in models folder.
+Goto sites like free3d.com and get your favorite models, or use your 3D scanner.
+Convert them to xyz data with any tool you like and put them into models folder.
 
 Don't forget to share your build screenshot in Luanti Forum.
 

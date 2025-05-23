@@ -17,6 +17,7 @@ spellbook.super = function(name, args)
     gravity = 0.1,
     speed = 10
   })
+  u.sound1(player:get_pos())
   minetest.chat_send_all(name .. " is now superman")
   return true, "Super Mode ON"
 end
@@ -233,8 +234,10 @@ spellbook.build = function(name, args)
     end
   else
     minetest.chat_send_player(name, "File not found: " .. fullpath)
+    return false
   end
 
+  u.sound2(origin)
   minetest.chat_send_player(name, "Building done.")
   return true
 end
