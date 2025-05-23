@@ -39,7 +39,14 @@ All the usage should be found in the spellbook.txt.
 
 ### 📂 Geometry Data
 
-- XYZ data files from [John Burkardt's collection](https://people.math.sc.edu/Burkardt/data/xyz/xyz.html)  
+**crystal.xyz, helix.xyz, sphere.xyz, spiral.xyz**
+- Author: [John Burkardt](https://people.math.sc.edu/Burkardt/)
+- Source: [XYZ Files](https://people.math.sc.edu/Burkardt/data/xyz/xyz.html)
 - License: [GNU Lesser General Public License (LGPL)](https://www.gnu.org/licenses/lgpl-2.1.html)
-- Author: John Burkardt
+
+I removed some cool data set (like the dragon) to avoid any license issues.
+Goto sites like free3d.com and get your favorite models.
+Convert them to xyz data with any tool you like and put them in models folder.
+
+Don't forget to share your build screenshot in Luanti Forum.
 
