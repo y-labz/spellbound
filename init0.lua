@@ -206,33 +206,31 @@ spellbook.build = function(name, args)
     if u2 then up_dir = u2 end
   end
   -- todo add limits??
-  -- handle up vector, up dir comes at last, upv[3]
+  -- handle up vector, up comes at last, upv[3]
   local upv = m.rotate_up_vector(up_dir)
 
   local fullpath = path_mod .. "/models/" .. filename
   minetest.chat_send_player(name, "file: " .. fullpath)
 
   if u.file_exists(fullpath) then
-    minetest.chat_send_player(name, "found it, start building...")
-    -- local points = u.lines_from(fullpath)
-    local points = u.gen_xyz_table(fullpath)
-    local ymin = u.get_min_coord(points, upv[3])
-    -- local p1
-    local p2 = vector.zero()
+    minetest.chat_send_player(name, "found file")
+    local points = u.lines_from(fullpath)
+    local p1
+    local p2 = {x=0, y=0, z=0}
     local distx = dist * look_dir.x
     local distz = dist * look_dir.z --north in map
-    -- local disty = 0  --same level as foot
-    minetest.chat_send_player(name, "#nodes: " .. tostring(#points))
+    local disty = 0  --same level as foot
+    minetest.chat_send_player(name, "found lines " .. tostring(#points))
 
-    for _, p in ipairs(points) do
-      -- p1 = u.parse_line_xyz(line)
-      -- if u.valid_xyz(p1) then
-      p2.x = origin.x + distx + scale * p[upv[1]]
-      p2.z = origin.z + distz + scale * p[upv[2]]
-      --y is up in game; so lowest point y is now 0, foot level:
-      p2.y = origin.y + scale * (p[upv[3]] - ymin)
-      minetest.set_node(p2, {name = material})
-      -- end
+    for i, line in ipairs(points) do
+      p1 = u.parse_line_xyz(line)
+      if u.valid_xyz(p1) then
+        p2.x = origin.x + distx + scale * p1[upv[1]]
+        p2.z = origin.z + distz + scale * p1[upv[2]]
+        p2.y = origin.y + disty + scale * p1[upv[3]] --y is up in game
+        --todo offset ymin from foot level...
+        minetest.set_node(p2, {name = material})
+      end
     end
   else
     minetest.chat_send_player(name, "File not found: " .. fullpath)
@@ -386,7 +384,6 @@ spellbook.beamsave = function(name, args)
   local res = minetest.safe_file_write(path_beam .. posname, pos_txt)
 
   if res then
-    u.sound1(pos)
     minetest.chat_send_player(name, "beamsave done: " .. path_beam .. posname)
     return true
   else

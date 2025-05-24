@@ -116,9 +116,32 @@ end
 
 -------------------------------------------------------------------------
 -- generate point table from file
+function utils.gen_xyz_table(file)
+  local lines = utils.lines_from(file)
+  local xyz_table = {}
+  local xyz
+  for _, line in ipairs(lines) do
+    xyz = utils.parse_line_xyz(line)
+    if utils.valid_xyz(xyz) then
+      table.insert(xyz_table, xyz)
+    end
+  end
+  return xyz_table
+end
 
 -------------------------------------------------------------------------
--- get min max of some coordinates for offset
+-- get min of some coordinates for offset
+function utils.get_min_coord(xyz_tab, axis)
+  -- xyz_tab = {{x1,y1,z1}, {x2,y2,z2},...}, e.g. axis=2 for y axis
+  -- return y_min of all points
+  local min_val = math.huge  -- start with +infinity
+  for _, coord in ipairs(xyz_tab) do
+    if coord[axis] and coord[axis] < min_val then
+      min_val = coord[axis]
+    end
+  end
+  return min_val
+end
 
 -------------------------------------------------------------------------
 -- build up height h from one position
