@@ -214,10 +214,8 @@ spellbook.build = function(name, args)
 
   if u.file_exists(fullpath) then
     minetest.chat_send_player(name, "found it, start building...")
-    -- local points = u.lines_from(fullpath)
     local points = u.gen_xyz_table(fullpath)
     local ymin = u.get_min_coord(points, upv[3])
-    -- local p1
     local p2 = vector.zero()
     local distx = dist * look_dir.x
     local distz = dist * look_dir.z --north in map
@@ -225,14 +223,11 @@ spellbook.build = function(name, args)
     minetest.chat_send_player(name, "#nodes: " .. tostring(#points))
 
     for _, p in ipairs(points) do
-      -- p1 = u.parse_line_xyz(line)
-      -- if u.valid_xyz(p1) then
       p2.x = origin.x + distx + scale * p[upv[1]]
       p2.z = origin.z + distz + scale * p[upv[2]]
       --y is up in game; so lowest point y is now 0, foot level:
       p2.y = origin.y + scale * (p[upv[3]] - ymin)
       minetest.set_node(p2, {name = material})
-      -- end
     end
   else
     minetest.chat_send_player(name, "File not found: " .. fullpath)

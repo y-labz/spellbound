@@ -106,7 +106,7 @@ function utils.valid_xyz(tab)
   if #tab ~= 3 then
     return false
   end
-  for i,v in ipairs(tab) do
+  for _, v in ipairs(tab) do
     if type(v) ~= "number" then
       return false
     end
