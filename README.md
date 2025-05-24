@@ -39,7 +39,7 @@ All the usage should be found in the spellbook.txt.
 
 ### 📂 Geometry Data
 
-**crystal.xyz, helix.xyz, sphere.xyz, spiral.xyz**
+**crystal.xyz, helix.xyz, sphere.xyz, sphere2.xyz**
 - Author: [John Burkardt](https://people.math.sc.edu/Burkardt/)
 - Source: [XYZ Files](https://people.math.sc.edu/Burkardt/data/xyz/xyz.html)
 - License: [GNU Lesser General Public License (LGPL)](https://www.gnu.org/licenses/lgpl-2.1.html)
