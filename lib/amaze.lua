@@ -11,9 +11,9 @@
 -------------------------------------------------------------------------
 local function gen_grid_xz(nx, nz, dx)
   local grid = {}
-  local coordx, coordz = 0, 0
+  local coordz = 0
   for z = 1, nz do
-    coordx = 0 --!!
+    local coordx = 0 --!!
     for x = 1, nx do
       table.insert(grid, {x=coordx, y=0, z=coordz})
       coordx = coordx + dx
@@ -94,7 +94,7 @@ local function dig_tunnel(p1, p2, H, W, extra)
   -- handle extra depth for smooth corner
   if extra then
     p1 = p1 - (0.5*W) * dir
-    p2 = p2 + (0.5*W) * dir
+    -- p2 = p2 + (0.5*W) * dir
     dist = dist + W
   end
   -- Choose any non-parallel vector
@@ -133,7 +133,7 @@ local function carve_maze(id, visited, nx, nz, grid)
       --tunnel H and W hard coded here, dont want too many args
       dig_tunnel(grid[id], grid[id2], 5, 4, true) --config
       carve_maze(id2, visited, nx, nz, grid)
-    end 
+    end
   end
 end
 
@@ -192,5 +192,6 @@ return {
   dig_tunnel = dig_tunnel,
   dig_ball = dig_ball,
   carve_maze = carve_maze,
+  build_cuboid = build_cuboid,
 }
 
