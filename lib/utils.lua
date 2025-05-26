@@ -209,5 +209,28 @@ function utils.update_param(params, args)
 end
 
 -------------------------------------------------------------------------
+-- check itemstring in global nodes table, return valid itemstring or nil
+function utils.check_material(istr)
+  if istr == "" or istr == nil then
+    -- minetest.debug("itemstring empty!")
+    return nil
+  end
+  -- if no :, add default: prefix
+  if not string.find(istr, ":") and istr ~= "air" then
+    istr = "default:" .. istr
+  end
+  -- go through the global table
+  for nodename, _ in pairs(minetest.registered_nodes) do
+    if istr == nodename then
+      -- minetest.debug("OK: ", nodename)
+      return istr
+    end
+  end
+  -- otherwise
+  -- minetest.debug("itemstring not found " .. istr)
+  return nil
+end
+
+-------------------------------------------------------------------------
 return utils
 

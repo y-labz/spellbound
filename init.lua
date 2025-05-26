@@ -4,6 +4,8 @@ local path_world = minetest.get_worldpath()
 
 local u = dofile(path_mod .. "/lib/utils.lua")
 local m = dofile(path_mod .. "/lib/maths.lua")
+local amz = dofile(path_mod .. "/lib/amaze.lua")
+
 local spellbook = {}
 
 ---------------------------------------------------------------------
@@ -36,7 +38,6 @@ spellbook.superoff = function(name, args)
 end
 
 ---------------------------------------------------------------------
--- todo: firespiral, firecylinder?
 spellbook.firering = function(name, args)
   -- Summon a fire ring to myself or another player
   -- Usage: /spell firering [playername] [n_fire] [radius]
@@ -118,6 +119,11 @@ spellbook.glasscube = function(name, args)
     M = "default:glass"
   }
   par = u.update_param(par, args)
+  par.M = u.check_material(par.M)
+  if not par.M then
+    minetest.chat_send_player(name, "ERROR: material not found")
+    return false
+  end
   -- length between 4 and 100, well disciplined little number
   par.L = math.max(8, math.min(100, par.L)) - 1
   -- local half = par.L / 2
@@ -161,7 +167,6 @@ end
 ---------------------------------------------------------------------
 -- build things like xyz models, huge walls, spirals and so on
 ---------------------------------------------------------------------
--- todo: 3D Print mimic with different materials for different layers
 spellbook.build = function(name, args)
   -- Build structures using xyz file input
   -- Usage: /spell build [xyz_file] [scale] [up_dir] [material]
@@ -206,6 +211,13 @@ spellbook.build = function(name, args)
     if u2 then up_dir = u2 end
   end
   -- todo add limits??
+  -- check material
+  material = u.check_material(material)
+  if not material then
+    minetest.chat_send_player(name, "ERROR: material not found")
+    return false
+  end
+
   -- handle up vector, up dir comes at last, upv[3]
   local upv = m.rotate_up_vector(up_dir)
 
@@ -250,6 +262,11 @@ spellbook.archimedes = function(name, args)
     M = "default:brick"  -- Material
   }
   par = u.update_param(par, args) --if special wishes
+  par.M = u.check_material(par.M)
+  if not par.M then
+    minetest.chat_send_player(name, "ERROR: material not found")
+    return false
+  end
 
   -- config part, not included in args yet
   local theta_max = 2 * math.pi * 4
@@ -296,6 +313,11 @@ spellbook.wall = function(name, args)
     M = "default:brick"   -- Material
   }
   par = u.update_param(par, args)
+  par.M = u.check_material(par.M)
+  if not par.M then
+    minetest.chat_send_player(name, "ERROR: material not found")
+    return false
+  end
 
   -- setup the target:
   local player
@@ -311,7 +333,7 @@ spellbook.wall = function(name, args)
   local player_pos = player:get_pos()
   -- pos.y = pos.y + player:get_properties().eye_height
   -- local p0 = vector.add(pos, vector.multiply(look_dir, par.D))
-  local p0 = player_pos + look_dir * par.D --vector operators
+  local p0 = player_pos + look_dir * par.D
   p0.y = player_pos.y --on the same level
   -- p0 = vector.round(p0)
   p0 = p0:round() --roundup to integers
@@ -336,6 +358,64 @@ spellbook.wall = function(name, args)
   return true
 end
 
+spellbook.amazingbase = function(name, args)
+  -- Build a underground base with a maze along the tunnel
+  -- Usage: /spell amazingbase []
+
+  -- default parameters
+  local par = {
+    tu_h = 5, tu_w = 4, --tunnels height and width
+    t1_l = 100,         --turnel-1(entrance) horizontal length
+    t1_d = 50,          --depth of exit point of entrance
+    t2_l = 100,         --turnel-2(maze exit) horizontal length
+    t2_d = 50,          --depth of base floor measured from maze
+    nx = 5, nz = 5,     --dimension of the maze grid
+    dx = 20,            --distance between maze grid points
+    r = 30              --base radius
+  }
+  par = u.update_param(par, args)
+  local player = minetest.get_player_by_name(name)
+
+  --dig entrance tunnel
+  local look_dir = player:get_look_dir()
+  look_dir.y = 0
+  look_dir = vector.normalize(look_dir)
+  local pos0 = player:get_pos()
+  local pos1 = pos0 + par.t1_l * look_dir - vector.new(0,par.t1_d,0)
+  amz.dig_tunnel(pos0, pos1, par.tu_h, par.tu_w, false)
+
+  --dig maze as protection level for our base
+  local visited = {}
+  local grid = amz.gen_grid_xz(par.nx, par.nz, par.dx)
+  math.randomseed(os.time())
+  local ini_id = math.random(1, #grid)
+  local shift = pos1 - grid[ini_id]
+  for i, v in ipairs(grid) do
+    grid[i] = v + shift
+  end
+  amz.carve_maze(ini_id, visited, par.nx, par.nz, grid)
+
+  --dig exit of the maze that leads to our base ball
+  --so 4 corners, find which one is farest from ini
+  local corner_ids = {1, par.nx, (par.nx*(par.nz-1))+1, #grid}
+  local exit_co = 1 --1 to 4, one of them
+  local max_dist = vector.distance(grid[exit_co], grid[ini_id])
+  for i, v in ipairs(corner_ids) do
+    local idist = vector.distance(grid[v], grid[ini_id])
+    if idist > max_dist then exit_co = i end
+  end
+  local exit = grid[corner_ids[exit_co]]
+  local exit_dir = vector.direction(grid[ini_id], exit)
+  local pos_base = exit + par.t2_l*exit_dir - vector.new(0,par.t2_d,0)
+  amz.dig_tunnel(exit, pos_base, par.tu_h, par.tu_w, false)
+
+  --dig base at the end
+  amz.dig_ball(pos_base + vector.new(0, par.r, 0), par.r)
+  u.sound2()
+  minetest.chat_send_all(name .. " created a mazing base!")
+  return true
+end
+
 ---------------------------------------------------------------------
 -- beam (like teleport) related functions
 ---------------------------------------------------------------------
@@ -344,12 +424,6 @@ local path_beam = path_world .. '/beam/'
 -- it'll just skip if the dir already exists. No harm done.
 minetest.mkdir(path_beam)
 minetest.log("action", "[beam] directory check: " .. path_beam)
-
--- if not minetest.mkdir(path_beam) then
---   minetest.log("action", "[beam] directory already exists at: " .. path_beam)
--- else
---   minetest.log("action", "[beam] Created data directory at: " .. path_beam)
--- end
 
 ---------------------------------------------------------------------
 spellbook.beamlist = function(name, args)
@@ -422,27 +496,8 @@ end
 spellbook.t = function(name, args)
   -- Test function for dev
   -- Usage: /spell t [args]
-
   minetest.log("action", "_VERSION: " .. _VERSION)
-
-  minetest.chat_send_all(name .. " is testing the spells...")
-  if args then
-    minetest.chat_send_all("args: " .. args)
-  else
-    minetest.chat_send_all("no args given")
-  end
-
-  local arg_tab = {}
-  for a in args:gmatch("[^%s]+") do
-    table.insert(arg_tab, a)
-  end
-
-  for i, value in ipairs(arg_tab) do
-    minetest.chat_send_all("arg: " .. i .. value)
-  end
-
-  u.greet(name)
-
+  --...
 end
 
 spellbook.purge = function(name, args)
@@ -462,12 +517,33 @@ spellbook.help = function(name, args)
 end
 
 ---------------------------------------------------------------------
--- Register the unified command
+-- add prifilege stuff here
+---------------------------------------------------------------------
+minetest.register_privilege("cast_spells", {
+  description = "Allows the player to cast powerful spells",
+  give_to_singleplayer = false,
+  give_to_admin = false,
+})
+
+minetest.register_chatcommand("I_am_the_real_Supreme", {
+  description = "This is dark magic, do not use it!",
+  privs = {interact = true},
+  func = function(name, param)
+    local privs = minetest.get_player_privs(name)
+    privs.cast_spells = true
+    minetest.set_player_privs(name, privs)
+    minetest.chat_send_player(name, "Welcome to the Council.")
+  end
+})
+
+---------------------------------------------------------------------
+-- Register the unified command, one command to rule them all
 ---------------------------------------------------------------------
 minetest.register_chatcommand("spell", {
   params = "<subcommand> [args]",
   description = "Cast a modular spell: /spell <subcommand> [args]",
-  privs = {interact = true},
+  -- privs = {interact = true},
+  privs = {cast_spells = true},
 
   func = function(name, param)
     local subcmd, args = param:match("^(%S+)%s*(.*)$")

@@ -43,6 +43,12 @@ Usage:
   the order does not matter, but the format Key=Value
 
 --------------------
+Spell: amazingbase
+Description: Build a underground base with a maze along the tunnel
+Usage:
+  /spell amazingbase []
+
+--------------------
 Spell: beamlist
 Description: Get a list of available beam positions
 Usage:
