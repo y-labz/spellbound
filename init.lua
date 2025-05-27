@@ -402,7 +402,10 @@ spellbook.amazingbase = function(name, args)
   local max_dist = vector.distance(grid[exit_co], grid[ini_id])
   for i, v in ipairs(corner_ids) do
     local idist = vector.distance(grid[v], grid[ini_id])
-    if idist > max_dist then exit_co = i end
+    if idist > max_dist then
+      max_dist = idist
+      exit_co = i
+    end
   end
   local exit = grid[corner_ids[exit_co]]
   local exit_dir = vector.direction(grid[ini_id], exit)
