@@ -52,7 +52,7 @@ Convert them to xyz data with any tool you like and put them into models folder.
 Don't forget to share your build screenshot in Luanti Forum.
 
 ---
-## So I wrote this mod ...
+**So I wrote this mod ...**
 
 - for me and my kids to spend time together & have fun 
 - to motivate the kids to learn typing & type fast
