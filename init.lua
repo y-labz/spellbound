@@ -124,7 +124,7 @@ spellbook.glasscube = function(name, args)
     minetest.chat_send_player(name, "ERROR: material not found")
     return false
   end
-  -- length between 4 and 100, well disciplined little number
+  -- length between 8 and 100, well disciplined little number
   par.L = math.max(8, math.min(100, par.L)) - 1
   -- local half = par.L / 2
   -- local half = math.floor((par.L - 1) / 2 + 0.5)
@@ -170,8 +170,6 @@ end
 spellbook.build = function(name, args)
   -- Build structures using xyz file input
   -- Usage: /spell build [xyz_file] [scale] [up_dir] [material]
-  -- Usage: 2 strings, 1st file, 2nd material, 2 numbers, scale & up_dir 1/2/3
-  -- Usage: could be mixed up or some default
 
   local player = minetest.get_player_by_name(name)
   local origin = player:get_pos()
@@ -358,9 +356,10 @@ spellbook.wall = function(name, args)
   return true
 end
 
+---------------------------------------------------------------------
 spellbook.amazingbase = function(name, args)
   -- Build a underground base with a maze along the tunnel
-  -- Usage: /spell amazingbase []
+  -- Usage: /spell amazingbase [...]
 
   -- default parameters
   local par = {
@@ -414,7 +413,7 @@ spellbook.amazingbase = function(name, args)
 
   --dig base at the end
   amz.dig_ball(pos_base + vector.new(0, par.r, 0), par.r)
-  u.sound2()
+  u.sound2(pos0)
   minetest.chat_send_all(name .. " created a mazing base!")
   return true
 end
@@ -471,7 +470,7 @@ end
 spellbook.beam = function(name, args)
   -- Teleport / beam myself to a saved position
   -- Usage: /spell beam [position_name]
-  -- Usage: (0, 10, 0) will be used if no name given
+  -- Usage: (0, 10, 0) will be used if no position_name given
   local player = minetest.get_player_by_name(name)
   local pos2 = vector.new(0, 10, 0)
 
@@ -528,7 +527,8 @@ minetest.register_privilege("cast_spells", {
   give_to_admin = false,
 })
 
-minetest.register_chatcommand("I_am_the_real_Supreme", {
+-- minetest.register_chatcommand("I_am_the_real_Supreme", {
+minetest.register_chatcommand("TianDiWuDi_QianKunJieFa", {
   description = "This is dark magic, do not use it!",
   privs = {interact = true},
   func = function(name, param)

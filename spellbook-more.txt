@@ -1,0 +1,192 @@
+Spell: super
+Description: Turn ON my superman mode (gravity = 0.1, speed = 10)
+Usage: /spell super
+
+--------------------
+Spell: superoff
+Description: Turn OFF my superman mode
+Usage: /spell superoff
+
+--------------------
+Spell: firering
+Description: Summon a fire ring to myself or another player
+Usage: /spell firering [playername] [n_fire] [radius]
+
+Arguments:
+  * playername (optional) – The player to target. Defaults to yourself.
+  * n_fire (optional number) – Number of fire nodes to summon. Defaults to 10.
+  * radius (optional number) – Radius of the fire ring. Defaults to 5.
+
+Order doesn't matter! The command is clever enough to figure it out:
+  * Only one string is allowed: that’s your player name
+  * The first number is treated as n_fire
+  * The second number is radius
+
+Examples:
+/spell firering           → Casts 10 fires around *you* in a radius of 5  
+/spell firering Alex      → Casts 10 fires around *Alex* in a radius of 5  
+/spell firering 20        → Casts 20 fires around *you* in a radius of 5  
+/spell firering 20 7      → Casts 20 fires around *you* in a radius of 7  
+/spell firering Alex 30   → Casts 30 fires around *Alex* in a radius of 5  
+/spell firering 30 Alex 7 → Casts 30 fires around *Alex* in a radius of 7
+
+--------------------
+Spell: glasscube
+Description: Summons a glass cage to trap / protect a player
+Usage:
+  /spell glasscube [T=playername] [L=10] [M=default:glass]
+
+Arguments:
+  * T (Target) – Player to encase. Defaults to yourself.
+  * L (Length) – Desired size of the cube (approximate). Defaults to 10.
+  * M (Material) – Node name used to build the cube. Defaults to default:glass.
+
+Notes:
+All arguments are optional and can be passed in any order using the format key=value.
+If no ":" is found in the material string, "default:" would be prefixed, except air.
+For example: M=stone => "default:stone" would be used in the function.
+L is limited internally between 8 and 100.
+
+Examples:
+/spell glasscube               → Encase yourself in a 10x10x10 cube of glass
+/spell glasscube T=Alex        → Trap Alex in a default-sized glass cube
+/spell glasscube L=5 M=ice     → Encase yourself in a 5x5x5 cube of ice
+/spell glasscube M=stone T=Bob → Trap Bob in a stone cube
+
+--------------------
+Spell: build
+Description: Build structures using xyz file input
+Usage:
+  /spell build [xyz_file] [scale] [up_dir] [material]
+
+Arguments:
+  * xyz_file (optional string) — Filename of the XYZ coordinate file to build. Defaults to "helix.xyz".
+  * scale (optional number) — Scaling factor to enlarge or shrink the model. Defaults to 1.
+  * up_dir (optional number) — Direction axis considered “up” in the model (usually 3 for Z-axis). Defaults to 3.
+  * material (optional string) — Node to use for construction. If no colon : is found and it’s not "air", default: is prefixed automatically. Defaults to "default:stone".
+
+Notes:
+  * All arguments are optional. The order of numbers and strings are not strict.
+  * The first string is treated as the XYZ filename (e.g., helix.xyz).
+  * The second string, if provided, is the material node used for building.
+  * The first number is interpreted as the scale factor.
+  * The second number, if present, is the up direction axis (1 = X, 2 = Y, 3 = Z).
+
+Examples:
+/spell build                        → Builds “helix.xyz”, scale 1, Z-up, in stone
+/spell build tower.xyz              → Uses tower.xyz, other values default
+/spell build 2                      → Builds helix.xyz, scaled by 2
+/spell build 3 dragon.xyz           → dragon.xyz, scale 3, material “default:stone”
+/spell build dragon.xyz 2 1 glass   → Proper full example: model, scale, updir, material
+
+--------------------
+Spell: archimedes
+Description: Build a cool archimedes spiral structure / wall
+Usage:
+  /spell archimedes [H=10] [M=default:brick]
+
+Arguments:
+  * H (Height) – Height of the spiral in nodes. Defaults to 10.
+  * M (Material) – Node name used to build the spiral. Defaults to default:brick.
+
+Notes:
+  * Arguments are passed in key=value style.
+  * Material name is passed through u.check_material() to handle prefixing and validation.
+  * You can omit any argument and the defaults will kick in like a loyal minion.
+
+Examples:
+/spell archimedes                     → Builds a 10-high spiral in brick
+/spell archimedes H=20                → Builds a taller spiral
+/spell archimedes M=glass             → Sparkling glass spiral, very fairy-core
+/spell archimedes H=30 M=mese         → A glowing spiral worthy of a wizard king
+
+--------------------
+Spell: wall
+Description: Build a grand wall in front of the target player
+Usage:
+  /spell wall [T=name] [H=40] [L=80] [D=30] [M=default:brick]
+  the order does not matter, but the format Key=Value
+
+Argument Format:
+    All parameters are optional and use Key=Value format.
+    The order doesn’t matter—pass your magic in any sequence you like.
+
+Arguments:
+    T (Target) — Player name to place the wall in front of. Defaults to caster.
+    H (Height) — Wall height in nodes. Defaults to 40.
+    L (Length) — Wall length. Defaults to 80.
+    D (Distance) — How far the wall is placed in front of the target. Defaults to 30.
+    M (Material) — Node type used to build. Defaults to default:brick. If no colon is present and it's not "air", default: is auto-prefixed.
+
+Examples:
+/spell wall                             → Wall 40 high, 80 long, 30 away from you, made of brick
+/spell wall H=60                        → Make it tall enough to shame castle gates
+/spell wall T=Steve M=glass             → Transparent prison for Steve, fancy!
+/spell wall T=Alex H=10 L=10 D=5 M=mese → Small shiny wall in front of Alex
+
+--------------------
+Spell: amazingbase
+Description: Build a underground base with a maze along the tunnel
+Summon an underground base of legendary proportions—beginning with a descending tunnel, weaving through a procedurally generated maze, and culminating in a majestic circular chamber deep beneath the surface.
+
+Usage:
+  /spell amazingbase [...]
+
+Arguments:
+  * tu_h (Tunnel Height) – Height of the entrance and exit tunnels. Default: 5
+  * tu_w (Tunnel Width) – Width of both tunnels. Default: 4
+  * t1_l (Tunnel 1 Length) – Horizontal length of the entrance tunnel. Default: 100
+  * t1_d (Tunnel 1 Depth) – Depth below the surface where entrance tunnel ends. Default: 50
+  * t2_l (Tunnel 2 Length) – Horizontal length of the exit tunnel from maze to base. Default: 100
+  * t2_d (Tunnel 2 Depth) – Additional depth to descend from maze to base. Default: 50
+  * nx (Maze Width) – Number of maze grid cells along X. Default: 5
+  * nz (Maze Length) – Number of maze grid cells along Z. Default: 5
+  * dx (Maze Cell Size) – Distance between maze nodes (spacing). Default: 20
+  * r (Base Radius) – Radius of the circular underground base chamber. Default: 30
+
+Notes:
+  * Arguments use key=value format and can appear in any order.
+  * All parameters are optional—defaults will auto-fill.
+  * The maze is procedurally generated and connected between the entrance and exit tunnels.
+  * The entry point into the maze is randomly selected from the nx × nz grid.
+  * The exit point of the maze is automatically placed at the farthest corner from the entry.
+
+--------------------
+Spell: beamlist
+Description: Get a list of available beam positions stored in path_world..'/beam/'
+Usage:
+  /spell beamlist
+
+--------------------
+Spell: beamsave
+Description: Save a beam position with a name
+Usage:
+  /spell beamsave [position_name]
+  pos_number will be used if no name given
+
+--------------------
+Spell: beam
+Description: Teleport / beam myself to a saved position
+Usage:
+  /spell beam [position_name]
+  (0, 10, 0) will be used if no position_name given
+
+--------------------
+Spell: t
+Description: Test function for dev
+Usage:
+  /spell t [args]
+
+--------------------
+Spell: purge
+Description: Quickly clears all objects (like animals) from the map
+Usage:
+  /spell purge
+
+--------------------
+Spell: help
+Description: print available spells
+Usage:
+  /spell help
+
+--------------------

@@ -26,8 +26,6 @@ Spell: build
 Description: Build structures using xyz file input
 Usage:
   /spell build [xyz_file] [scale] [up_dir] [material]
-  2 strings, 1st file, 2nd material, 2 numbers, scale & up_dir 1/2/3
-  could be mixed up or some default
 
 --------------------
 Spell: archimedes
@@ -46,7 +44,7 @@ Usage:
 Spell: amazingbase
 Description: Build a underground base with a maze along the tunnel
 Usage:
-  /spell amazingbase []
+  /spell amazingbase [...]
 
 --------------------
 Spell: beamlist
@@ -66,7 +64,7 @@ Spell: beam
 Description: Teleport / beam myself to a saved position
 Usage:
   /spell beam [position_name]
-  (0, 10, 0) will be used if no name given
+  (0, 10, 0) will be used if no position_name given
 
 --------------------
 Spell: t

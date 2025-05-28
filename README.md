@@ -3,24 +3,25 @@
 A Mod for Minetest Game: a mystical collection of spells / chatcommands to enchant your Minetest experience.
 From summoning structures to conjuring chaos, this mod brings command-line wizardry to your fingertips. 🪄
 
----
-## So I wrote this mod ...
+Version: 1.0
 
-- for me and my kids to spend time together & have fun 
-- motivate the kids to learn typing & type fast
-- motivate the kids to learn some English words, Math & Coding
+License: LGPL 2.1 or later
 
-I am new to Luanti and Lua, so expect some basic mistakes.
-And I do not have a lot of time for this repo...
+Dependencies: default mod (found in minetest_game)
 
-All the usage should be found in the spellbook.txt.
+Report bugs or request help on the forum topic.
 
 ---
-### About the name...
+Installation
 
-- "Spells" - my first choice, but might be too big and general...
-- "ySpells" - would be OK, could be better...
-- "Spellbook" - sounds really cool, but widely used already...
+Unzip the archive, rename the folder to spellbound and place it in minetest/mods/
+
+(GNU/Linux: If you use a system-wide installation place it in ~/.minetest/mods/.)
+
+(If you only want this to be used in a single world, place the folder in worldmods/ in your worlddirectory.)
+
+For further information or help see:
+http://wiki.minetest.com/wiki/Installing_Mods
 
 ---
 ## 📜 Credits
@@ -45,8 +46,20 @@ All the usage should be found in the spellbook.txt.
 - License: [GNU Lesser General Public License (LGPL)](https://www.gnu.org/licenses/lgpl-2.1.html)
 
 I removed some cool data set (like the dragon) to avoid any license issues.
-Goto sites like free3d.com and get your favorite models, or use your 3D scanner.
+Goto sites like free3d.com and get your favorite models, or just use your 3D scanner.
 Convert them to xyz data with any tool you like and put them into models folder.
 
 Don't forget to share your build screenshot in Luanti Forum.
+
+---
+## So I wrote this mod ...
+
+- for me and my kids to spend time together & have fun 
+- to motivate the kids to learn typing & type fast
+- to motivate the kids to learn some English words, Math & Coding
+
+I am new to Luanti and Lua, so expect some basic mistakes.
+And I do not have a lot of time for this repo...
+
+All the usage should be found in the spellbook-more.txt.
 
