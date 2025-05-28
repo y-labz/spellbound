@@ -12,7 +12,7 @@ Dependencies: default mod (found in minetest_game)
 Report bugs or request help on the forum topic.
 
 ---
-Installation
+**Installation**
 
 Unzip the archive, rename the folder to spellbound and place it in minetest/mods/
 
