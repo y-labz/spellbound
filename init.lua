@@ -528,7 +528,7 @@ minetest.register_privilege("cast_spells", {
 })
 
 -- minetest.register_chatcommand("I_am_the_real_Supreme", {
-minetest.register_chatcommand("TianDiWuDi_QianKunJieFa", {
+minetest.register_chatcommand("TianDiWuJi_QianKunJieFa", {
   description = "This is dark magic, do not use it!",
   privs = {interact = true},
   func = function(name, param)
