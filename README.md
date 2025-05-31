@@ -5,11 +5,17 @@ From summoning structures to conjuring chaos, this mod brings command-line wizar
 
 Version: 1.0
 
-License: LGPL 2.1 or later
-
 Dependencies: default mod (found in minetest_game)
 
 Report bugs or request help on the forum topic.
+
+---
+**License**
+
+- The code in this project is licensed under the GNU Lesser General Public License (LGPL) 2.1 or later.
+- All custom sounds and xyz files are **NOT** covered by the LGPL.
+  - Sound file credits and original licenses are listed below.
+  - Please refer to their individual licenses for terms of use.
 
 ---
 **Installation**

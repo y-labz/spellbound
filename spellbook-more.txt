@@ -71,6 +71,7 @@ Notes:
   * The second string, if provided, is the material node used for building.
   * The first number is interpreted as the scale factor.
   * The second number, if present, is the up direction axis (1 = X, 2 = Y, 3 = Z).
+  * sep in xyz file could be semicolon ";" comma "," space " "
 
 Examples:
 /spell build                        → Builds “helix.xyz”, scale 1, Z-up, in stone
